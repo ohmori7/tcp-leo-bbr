@@ -2729,8 +2729,14 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_acked_sacked, int newly_lost,
 	int sndcnt = 0;
 	int delta = tp->snd_ssthresh - tcp_packets_in_flight(tp);
 
+#ifdef TCP_LEO
+	/* XXX: prior_cwnd may be 0 in somewhere because we set cwnd to 0. */
+	if (newly_acked_sacked <= 0 || tp->prior_cwnd == 0)
+		return;
+#else /* TCP_LEO */
 	if (newly_acked_sacked <= 0 || WARN_ON_ONCE(!tp->prior_cwnd))
 		return;
+#endif /* ! TCP_LEO */
 
 	tp->prr_delivered += newly_acked_sacked;
 	if (delta < 0) {
@@ -5766,6 +5772,9 @@ void tcp_check_space(struct sock *sk)
 			tcp_chrono_stop(sk, TCP_CHRONO_SNDBUF_LIMITED);
 	}
 }
+#ifdef TCP_LEO
+EXPORT_SYMBOL(tcp_check_space);
+#endif /* TCP_LEO */
 
 static inline void tcp_data_snd_check(struct sock *sk)
 {

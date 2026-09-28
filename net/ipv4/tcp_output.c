@@ -1919,6 +1919,9 @@ unsigned int tcp_current_mss(struct sock *sk)
 
 	return mss_now;
 }
+#ifdef TCP_LEO
+EXPORT_SYMBOL(tcp_current_mss);
+#endif /* TCP_LEO */
 
 /* RFC2861, slow part. Adjust cwnd, after it was not full during one rto.
  * As additional protections, we do not touch cwnd in retransmission phases,
@@ -3044,6 +3047,9 @@ void __tcp_push_pending_frames(struct sock *sk, unsigned int cur_mss,
 			   sk_gfp_mask(sk, GFP_ATOMIC)))
 		tcp_check_probe_timer(sk);
 }
+#ifdef TCP_LEO
+EXPORT_SYMBOL(__tcp_push_pending_frames);
+#endif /* TCP_LEO */
 
 /* Send _single_ skb sitting at the send head. This function requires
  * true push pending frames to setup probe timer etc.

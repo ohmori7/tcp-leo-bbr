@@ -13,6 +13,8 @@
 #ifndef _LINUX_TCP_H
 #define _LINUX_TCP_H
 
+/* XXX: should make this compile option... */
+#define TCP_LEO	/* TCP for LEO satellite communications. */
 
 #include <linux/skbuff.h>
 #include <linux/win_minmax.h>
